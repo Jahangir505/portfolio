@@ -70,7 +70,7 @@ export function About() {
 
             <motion.div variants={staggerItem} className="flex flex-wrap gap-4 pt-4">
               <motion.a
-                href="/resume.pdf"
+                href="/cv/Jahangir CV.pdf"
                 download
                 className="px-6 py-3 bg-gradient-to-r from-[oklch(0.8_0.18_195)] to-[oklch(0.7_0.28_285)] text-background font-semibold rounded-lg hover:shadow-2xl transition-shadow flex items-center gap-2"
                 whileHover={{ scale: 1.05 }}

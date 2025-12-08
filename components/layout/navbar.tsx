@@ -123,7 +123,7 @@ export function Navbar() {
               <ThemeToggle />
               
               <motion.a
-                href="/resume.pdf"
+                href="/cv/Jahangir CV.pdf"
                 download
                 className="px-4 py-2 text-sm font-medium rounded-lg glass neon-border hover:bg-white/10 transition-colors"
                 whileHover={{ scale: 1.05 }}
@@ -194,7 +194,7 @@ export function Navbar() {
             </motion.div>
 
             <motion.a
-              href="/resume.pdf"
+              href="/cv/Jahangir CV.pdf"
               download
               className="px-6 py-3 text-lg font-medium rounded-lg glass neon-border hover:bg-white/10 transition-colors"
               initial={{ opacity: 0, y: 20 }}
