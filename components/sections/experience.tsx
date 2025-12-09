@@ -26,31 +26,33 @@ export function Experience() {
           initial="initial"
           whileInView="animate"
           viewport={{ once: true, margin: "-100px" }}
-          className="max-w-4xl mx-auto"
+          className="max-w-6xl mx-auto"
         >
           <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[oklch(0.8_0.18_195)] via-[oklch(0.7_0.28_285)] to-[oklch(0.75_0.25_340)]" />
+            {/* Middle Timeline Border */}
+            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 md:w-0.5 bg-gradient-to-b from-[oklch(0.8_0.18_195)] via-[oklch(0.7_0.28_285)] to-[oklch(0.75_0.25_340)] -translate-x-1/2" />
 
             {experiences.map((exp, index) => {
               const Icon = exp.type === "work" ? Briefcase : GraduationCap;
-              const isEven = index % 2 === 0;
+              const isLeft = index % 2 === 0;
 
               return (
                 <motion.div
                   key={exp.id}
                   variants={staggerItem}
-                  className={`relative mb-12 ${
-                    isEven ? "md:pr-1/2 md:text-right" : "md:pl-1/2 md:ml-auto"
-                  }`}
+                  className="relative mb-16 md:mb-20"
                 >
-                  {/* Timeline dot */}
-                  <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[oklch(0.8_0.18_195)] border-4 border-background animate-pulse" />
+                  {/* Timeline Dot - Center */}
+                  <div className="absolute left-8 md:left-1/2 top-8 -translate-x-1/2 w-5 h-5 rounded-full bg-[oklch(0.8_0.18_195)] border-4 border-background shadow-lg shadow-[oklch(0.8_0.18_195)]/50 z-10">
+                    <div className="absolute inset-0 rounded-full bg-[oklch(0.8_0.18_195)] animate-ping opacity-75" />
+                  </div>
 
-                  {/* Content */}
+                  {/* Content Card */}
                   <motion.div
                     whileHover={{ scale: 1.02 }}
-                    className={`ml-20 md:ml-0 ${isEven ? "md:mr-12" : "md:ml-12"}`}
+                    className={`ml-16 md:ml-0 md:w-[calc(50%-2rem)] ${
+                      isLeft ? 'md:mr-auto md:pr-12' : 'md:ml-auto md:pl-12'
+                    }`}
                   >
                     <div className="glass rounded-xl p-6 border border-white/10 hover:border-[oklch(0.8_0.18_195)]/50 transition-all">
                       <div className="flex items-start gap-4 mb-4">
