@@ -21,6 +21,7 @@ type ContactFormData = z.infer<typeof contactSchema>;
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -31,31 +32,45 @@ export function Contact() {
     resolver: zodResolver(contactSchema),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onSubmit = async (_data: ContactFormData) => {
+  const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
+    setError(null);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    // Show success state
-    setIsSuccess(true);
-    
-    // Trigger confetti
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ["#00ffff", "#ff00ff", "#ff0080"],
-    });
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
 
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSuccess(false);
-      reset();
-    }, 3000);
+      // Show success state
+      setIsSuccess(true);
+      
+      // Trigger confetti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#00ffff", "#ff00ff", "#ff0080"],
+      });
 
-    setIsSubmitting(false);
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setIsSuccess(false);
+        reset();
+      }, 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
+      console.error('Error sending message:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -233,6 +248,16 @@ export function Contact() {
                   </>
                 )}
               </motion.button>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg"
+                >
+                  <p className="text-red-500 text-sm">{error}</p>
+                </motion.div>
+              )}
             </form>
           </motion.div>
         </div>
