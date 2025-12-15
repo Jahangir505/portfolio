@@ -1,5 +1,6 @@
 "use client";
 
+import { VisitorCounter } from "@/components/ui/visitor-counter";
 import { motion } from "framer-motion";
 import { Github, Heart, Linkedin, Mail, Twitter } from "lucide-react";
 import Link from "next/link";
@@ -89,9 +90,12 @@ export function Footer() {
             <p className="text-sm text-muted-foreground">
               © {currentYear} Jahangir Hossain. All rights reserved.
             </p>
-            <p className="text-sm text-muted-foreground flex items-center">
-              Made with <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" /> and lots of coffee
-            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <VisitorCounter />
+              <p className="text-sm text-muted-foreground flex items-center">
+                Made with <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" /> and lots of coffee
+              </p>
+            </div>
           </div>
         </div>
       </div>
