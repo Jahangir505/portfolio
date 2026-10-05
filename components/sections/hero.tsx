@@ -1,22 +1,37 @@
 "use client";
 
-import { FloatingOrb } from "@/components/3d/floating-orb";
 import { GithubActivity } from "@/components/ui/github-activity";
 import { staggerContainer, staggerItem } from "@/lib/animations";
+import { siteConfig } from "@/lib/site";
 import { motion } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
+// three.js is large and purely decorative: load it in its own chunk after hydration.
+const FloatingOrb = dynamic(
+  () => import("@/components/3d/floating-orb").then((mod) => mod.FloatingOrb),
+  { ssr: false }
+);
+
+// Slide-only entrance (no opacity fade) so the H1 is painted immediately and
+// can count as the Largest Contentful Paint.
+const heroTextItem = {
+  initial: { y: 20 },
+  animate: { y: 0 },
+};
+
 const roles = [
-  "Full Stack Developer",
-  "Building the Future",
-  "Turning Ideas into Reality",
-  "Creating Digital Experiences",
+  siteConfig.role,
+  "React.js & Next.js Developer",
+  "Node.js & Laravel Developer",
+  "Building Fast, Accessible Web Apps",
 ];
 
 export function Hero() {
   const [currentRole, setCurrentRole] = useState(0);
-  const [displayText, setDisplayText] = useState("");
+  // Start with the full first role so the server-rendered HTML carries it.
+  const [displayText, setDisplayText] = useState(roles[0]);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -82,30 +97,31 @@ export function Hero() {
 
           {/* Name */}
           <motion.h1
-            variants={staggerItem}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6"
+            variants={heroTextItem}
+            className="text-5xl md:text-7xl font-bold mb-6"
           >
-            <span className="gradient-text neon-glow">Jahangir Hossain</span>
+            <span className="gradient-text neon-glow">{siteConfig.name}</span>
           </motion.h1>
 
           {/* Animated Role */}
           <motion.div
             variants={staggerItem}
-            className="h-16 md:h-20 mb-8"
+            className="h-[4.5rem] md:h-24 mb-8"
           >
-            <h2 className="text-3xl md:text-5xl font-bold text-muted-foreground">
+            <p className="sr-only">{siteConfig.role}</p>
+            <p aria-hidden="true" className="text-3xl md:text-5xl font-bold text-muted-foreground">
               {displayText}
               <span className="animate-pulse">|</span>
-            </h2>
+            </p>
           </motion.div>
 
           {/* Description */}
           <motion.p
-            variants={staggerItem}
+            variants={heroTextItem}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
           >
-            I craft beautiful, performant web applications using modern technologies.
-            Specializing in React, Next.js, Node.js, and everything in between.
+            I build fast, maintainable web applications with React.js, Next.js and
+            TypeScript on the front end, and Node.js and Laravel on the back end.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -114,6 +130,7 @@ export function Hero() {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
             <motion.button
+              type="button"
               onClick={scrollToContact}
               className="group px-8 py-4 bg-gradient-to-r from-[oklch(0.8_0.18_195)] to-[oklch(0.7_0.28_285)] text-background font-semibold rounded-lg hover:shadow-2xl transition-shadow relative overflow-hidden"
               whileHover={{ scale: 1.05 }}
@@ -121,12 +138,13 @@ export function Hero() {
             >
               <span className="relative z-10 flex items-center gap-2">
                 Hire Me
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.7_0.28_285)] to-[oklch(0.75_0.25_340)] opacity-0 group-hover:opacity-100 transition-opacity" />
             </motion.button>
 
             <motion.button
+              type="button"
               onClick={scrollToProjects}
               className="group px-8 py-4 glass neon-border font-semibold rounded-lg hover:bg-white/10 transition-colors"
               whileHover={{ scale: 1.05 }}
@@ -134,7 +152,7 @@ export function Hero() {
             >
               <span className="flex items-center gap-2">
                 View Work
-                <Download className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
+                <Download className="w-5 h-5 group-hover:translate-y-1 transition-transform" aria-hidden="true" />
               </span>
             </motion.button>
           </motion.div>
@@ -152,6 +170,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5 }}
+            aria-hidden="true"
             className="absolute bottom-8 left-1/2 -translate-x-1/2"
           >
             <motion.div

@@ -2,21 +2,21 @@
 
 import { VisitorCounter } from "@/components/ui/visitor-counter";
 import { motion } from "framer-motion";
-import { Github, Heart, Linkedin, Mail, Twitter } from "lucide-react";
+import { siteConfig } from "@/lib/site";
+import { Github, Heart, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 
 const socialLinks = [
-  { name: "GitHub", href: "https://github.com", icon: Github },
-  { name: "LinkedIn", href: "https://linkedin.com", icon: Linkedin },
-  { name: "Twitter", href: "https://twitter.com", icon: Twitter },
-  { name: "Email", href: "mailto:jahangir147441@gmail.com", icon: Mail },
+  { name: "GitHub", href: siteConfig.social.github, icon: Github },
+  { name: "LinkedIn", href: siteConfig.social.linkedin, icon: Linkedin },
+  { name: "Email", href: `mailto:${siteConfig.email}`, icon: Mail },
 ];
 
 const footerLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 export function Footer() {
@@ -30,11 +30,11 @@ export function Footer() {
           <div>
             <Link href="/" className="inline-block mb-4">
               <span className="text-2xl font-bold gradient-text">
-                Jahangir Hossain
+                {siteConfig.name}
               </span>
             </Link>
             <p className="text-muted-foreground text-sm">
-              Full Stack Developer crafting beautiful, performant web experiences.
+              {siteConfig.role} building web applications with React.js, Next.js, Node.js and Laravel.
             </p>
           </div>
 
@@ -69,14 +69,16 @@ export function Footer() {
                   <motion.a
                     key={social.name}
                     href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    {...(!social.href.startsWith("mailto:") && {
+                      target: "_blank",
+                      rel: "noopener noreferrer me",
+                    })}
                     className="p-2 rounded-lg glass hover:bg-white/10 transition-colors group"
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     aria-label={social.name}
                   >
-                    <Icon className="w-5 h-5 text-muted-foreground group-hover:text-[oklch(0.8_0.18_195)] transition-colors" />
+                    <Icon className="w-5 h-5 text-muted-foreground group-hover:text-[oklch(0.8_0.18_195)] transition-colors" aria-hidden="true" />
                   </motion.a>
                 );
               })}
@@ -88,12 +90,12 @@ export function Footer() {
         <div className="pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-muted-foreground">
-              © {currentYear} Jahangir Hossain. All rights reserved.
+              © {currentYear} {siteConfig.name}. All rights reserved.
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <VisitorCounter />
               <p className="text-sm text-muted-foreground flex items-center">
-                Made with <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" /> and lots of coffee
+                Made with <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" aria-label="love" /> and lots of coffee
               </p>
             </div>
           </div>

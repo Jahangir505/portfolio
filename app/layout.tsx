@@ -4,7 +4,9 @@ import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provi
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ReadingProgress } from "@/components/ui/reading-progress";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
-import type { Metadata } from "next";
+import { personSchema, websiteSchema } from "@/lib/seo";
+import { SITE_URL, jsonLd, siteConfig } from "@/lib/site";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -14,62 +16,19 @@ const inter = Inter({
   display: "swap",
 });
 
+const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://jahangirhossain.dev'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Jahangir Hossain | Full Stack Developer | React, Next.js, Node.js Expert",
-    template: "%s | Jahangir Hossain"
+    default: `${siteConfig.name} | Full-Stack & Front-End Developer`,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "Experienced Full Stack Developer in Bangladesh specializing in React, Next.js, Node.js, TypeScript, and modern web technologies. Available for freelance projects and full-time opportunities. Expert in building scalable web applications, e-commerce solutions, and custom software development.",
-  keywords: [
-    // Core Skills
-    "Full Stack Developer",
-    "React Developer",
-    "Next.js Developer",
-    "Node.js Developer",
-    "TypeScript Developer",
-    "JavaScript Developer",
-    
-    // Technologies
-    "React.js",
-    "Next.js 14",
-    "Node.js",
-    "Express.js",
-    "MongoDB",
-    "MySQL",
-    "PostgreSQL",
-    "Tailwind CSS",
-    "Laravel",
-    "PHP Developer",
-    
-    // Services
-    "Web Development",
-    "Frontend Development",
-    "Backend Development",
-    "Full Stack Development",
-    "API Development",
-    "E-commerce Development",
-    "Custom Software Development",
-    "Web Application Development",
-    "Mobile App Development",
-    "React Native Developer",
-    
-    // Location-based
-    "Web Developer Bangladesh",
-    "Full Stack Developer Dhaka",
-    "Freelance Developer Bangladesh",
-    "Remote Developer",
-    
-    // Specific
-    "Hire React Developer",
-    "Hire Next.js Developer",
-    "Freelance Web Developer",
-    "Software Engineer",
-    "AWS Developer",
-  ],
-  authors: [{ name: "Jahangir Hossain", url: "https://jahangirhossain.dev" }],
-  creator: "Jahangir Hossain",
-  publisher: "Jahangir Hossain",
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name, url: `${SITE_URL}/` }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
   formatDetection: {
     email: false,
     address: false,
@@ -78,45 +37,33 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://jahangirhossain.dev",
-    title: "Jahangir Hossain | Full Stack Developer | React & Next.js Expert",
-    description: "Experienced Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. Available for freelance projects and full-time opportunities.",
-    siteName: "Jahangir Hossain Portfolio",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Jahangir Hossain - Full Stack Developer Portfolio",
-      },
-    ],
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} | Full-Stack Developer`,
+    description: siteConfig.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jahangir Hossain | Full Stack Developer",
-    description: "Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. Building beautiful, performant web experiences.",
-    images: ["/og-image.jpg"],
-    creator: "@jahangirhossain",
+    title: `${siteConfig.name} | Full-Stack Developer`,
+    description: siteConfig.description,
   },
   robots: {
     index: true,
     follow: true,
-    nocache: false,
     googleBot: {
       index: true,
       follow: true,
-      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: "https://jahangirhossain.dev",
-  },
-  verification: {
-    google: "your-google-verification-code", // Add after Google Search Console setup
-  },
+  // Only emitted when set; DNS verification in Search Console needs no tag at all.
+  ...(googleVerification && { verification: { google: googleVerification } }),
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0b0b12",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -124,44 +71,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Jahangir Hossain",
-    url: "https://jahangirhossain.dev",
-    image: "https://jahangirhossain.dev/profile.jpg",
-    sameAs: [
-      "https://github.com/Jahangir505",
-      "https://linkedin.com/in/jahangirhossain",
-      "https://twitter.com/jahangirhossain"
-    ],
-    jobTitle: "Full Stack Developer",
-    worksFor: {
-      "@type": "Organization",
-      name: "Combosoft Ltd"
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Dhaka",
-      addressCountry: "Bangladesh"
-    },
-    email: "jahangir147441@gmail.com",
-    telephone: "+8801778175444",
-    knowsAbout: [
-      "React.js",
-      "Next.js",
-      "Node.js",
-      "TypeScript",
-      "JavaScript",
-      "Web Development",
-      "Full Stack Development",
-      "MongoDB",
-      "MySQL",
-      "AWS",
-      "Laravel",
-      "PHP"
-    ],
-    description: "Experienced Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. Available for freelance projects and full-time opportunities."
+    "@graph": [personSchema, websiteSchema],
   };
 
   return (
@@ -169,7 +81,7 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={jsonLd(structuredData)}
         />
       </head>
       <body className={`${inter.variable} font-sans antialiased grain`}>
@@ -179,10 +91,16 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-background focus:text-foreground focus:ring-2 focus:ring-[oklch(0.8_0.18_195)]"
+          >
+            Skip to content
+          </a>
           <SmoothScrollProvider>
             <ReadingProgress />
             <Navbar />
-            <main className="min-h-screen">
+            <main id="main-content" className="min-h-screen">
               {children}
             </main>
             <Footer />

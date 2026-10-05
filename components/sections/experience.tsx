@@ -5,6 +5,14 @@ import { staggerContainer, staggerItem } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { Briefcase, GraduationCap } from "lucide-react";
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// "2023-02" -> "Feb 2023"
+function formatMonth(value: string) {
+  const [year, month] = value.split("-");
+  return month ? `${MONTHS[Number(month) - 1]} ${year}` : year;
+}
+
 export function Experience() {
   return (
     <section id="experience" className="py-20 md:py-32 relative bg-muted/20">
@@ -30,7 +38,7 @@ export function Experience() {
         >
           <div className="relative">
             {/* Middle Timeline Border */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 md:w-0.5 bg-gradient-to-b from-[oklch(0.8_0.18_195)] via-[oklch(0.7_0.28_285)] to-[oklch(0.75_0.25_340)] -translate-x-1/2" />
+            <div aria-hidden="true" className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 md:w-0.5 bg-gradient-to-b from-[oklch(0.8_0.18_195)] via-[oklch(0.7_0.28_285)] to-[oklch(0.75_0.25_340)] -translate-x-1/2" />
 
             {experiences.map((exp, index) => {
               const Icon = exp.type === "work" ? Briefcase : GraduationCap;
@@ -43,7 +51,7 @@ export function Experience() {
                   className="relative mb-16 md:mb-20"
                 >
                   {/* Timeline Dot - Center */}
-                  <div className="absolute left-8 md:left-1/2 top-8 -translate-x-1/2 w-5 h-5 rounded-full bg-[oklch(0.8_0.18_195)] border-4 border-background shadow-lg shadow-[oklch(0.8_0.18_195)]/50 z-10">
+                  <div aria-hidden="true" className="absolute left-8 md:left-1/2 top-8 -translate-x-1/2 w-5 h-5 rounded-full bg-[oklch(0.8_0.18_195)] border-4 border-background shadow-lg shadow-[oklch(0.8_0.18_195)]/50 z-10">
                     <div className="absolute inset-0 rounded-full bg-[oklch(0.8_0.18_195)] animate-ping opacity-75" />
                   </div>
 
@@ -57,7 +65,7 @@ export function Experience() {
                     <div className="glass rounded-xl p-6 border border-white/10 hover:border-[oklch(0.8_0.18_195)]/50 transition-all">
                       <div className="flex items-start gap-4 mb-4">
                         <div className="p-2 rounded-lg bg-[oklch(0.8_0.18_195)]/10">
-                          <Icon className="w-5 h-5 text-[oklch(0.8_0.18_195)]" />
+                          <Icon className="w-5 h-5 text-[oklch(0.8_0.18_195)]" aria-hidden="true" />
                         </div>
                         <div className="flex-1">
                           <h3 className="text-xl font-bold mb-1">{exp.title}</h3>
@@ -65,7 +73,13 @@ export function Experience() {
                             {exp.company}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {exp.location} • {exp.startDate} - {exp.current ? "Present" : exp.endDate}
+                            {exp.location} •{" "}
+                            <time dateTime={exp.startDate}>{formatMonth(exp.startDate)}</time> -{" "}
+                            {exp.current ? (
+                              "Present"
+                            ) : (
+                              <time dateTime={exp.endDate}>{formatMonth(exp.endDate)}</time>
+                            )}
                           </p>
                         </div>
                       </div>
@@ -73,23 +87,23 @@ export function Experience() {
                       <ul className="space-y-2 text-muted-foreground text-sm">
                         {exp.description.map((item, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <span className="text-[oklch(0.8_0.18_195)] mt-1">•</span>
+                            <span className="text-[oklch(0.8_0.18_195)] mt-1" aria-hidden="true">•</span>
                             <span>{item}</span>
                           </li>
                         ))}
                       </ul>
 
                       {exp.technologies && (
-                        <div className="flex flex-wrap gap-2 mt-4">
+                        <ul className="flex flex-wrap gap-2 mt-4" aria-label="Technologies used">
                           {exp.technologies.map((tech) => (
-                            <span
+                            <li
                               key={tech}
                               className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground"
                             >
                               {tech}
-                            </span>
+                            </li>
                           ))}
-                        </div>
+                        </ul>
                       )}
                     </div>
                   </motion.div>

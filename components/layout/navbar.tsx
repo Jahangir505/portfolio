@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -12,7 +13,7 @@ const navItems = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 export function Navbar() {
@@ -40,11 +41,14 @@ export function Navbar() {
     }
   }, [isOpen]);
 
-  const handleLinkClick = (href: string) => {
+  // On the homepage, smooth-scroll to in-page sections; elsewhere let the
+  // link navigate to "/#section" normally.
+  const handleLinkClick = (e: React.MouseEvent, href: string) => {
     setIsOpen(false);
-    if (href.startsWith("#")) {
-      const element = document.querySelector(href);
+    if (href.startsWith("/#") && pathname === "/") {
+      const element = document.querySelector(href.slice(1));
       if (element) {
+        e.preventDefault();
         element.scrollIntoView({ behavior: "smooth" });
       }
     }
@@ -63,7 +67,7 @@ export function Navbar() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="relative group">
+            <Link href="/" className="relative group" aria-label={`${siteConfig.name} - Home`}>
               <motion.span
                 className="text-2xl font-bold gradient-text"
                 whileHover={{ scale: 1.05 }}
@@ -82,19 +86,14 @@ export function Navbar() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => {
-                const isActive = pathname === item.href || 
-                  (item.href.startsWith("#") && pathname === "/");
+                const isActive = pathname === item.href;
                 
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
-                    onClick={(e) => {
-                      if (item.href.startsWith("#")) {
-                        e.preventDefault();
-                        handleLinkClick(item.href);
-                      }
-                    }}
+                    onClick={(e) => handleLinkClick(e, item.href)}
+                    aria-current={isActive ? "page" : undefined}
                     className="relative group"
                   >
                     <motion.span
@@ -123,7 +122,7 @@ export function Navbar() {
               <ThemeToggle />
               
               <motion.a
-                href="/cv/Jahangir CV.pdf"
+                href={siteConfig.cvPath}
                 download
                 className="px-4 py-2 text-sm font-medium rounded-lg glass neon-border hover:bg-white/10 transition-colors"
                 whileHover={{ scale: 1.05 }}
@@ -135,9 +134,12 @@ export function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
-              aria-label="Toggle menu"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -154,6 +156,8 @@ export function Navbar() {
           closed: { opacity: 0, x: "100%" },
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        id="mobile-menu"
+        inert={!isOpen}
         className="fixed inset-0 z-40 md:hidden"
       >
         <div className="absolute inset-0 bg-background/95 backdrop-blur-xl">
@@ -167,12 +171,8 @@ export function Navbar() {
               >
                 <Link
                   href={item.href}
-                  onClick={(e) => {
-                    if (item.href.startsWith("#")) {
-                      e.preventDefault();
-                    }
-                    handleLinkClick(item.href);
-                  }}
+                  onClick={(e) => handleLinkClick(e, item.href)}
+                  aria-current={pathname === item.href ? "page" : undefined}
                   className={cn(
                     "text-2xl font-medium transition-colors",
                     pathname === item.href
@@ -194,7 +194,7 @@ export function Navbar() {
             </motion.div>
 
             <motion.a
-              href="/cv/Jahangir CV.pdf"
+              href={siteConfig.cvPath}
               download
               className="px-6 py-3 text-lg font-medium rounded-lg glass neon-border hover:bg-white/10 transition-colors"
               initial={{ opacity: 0, y: 20 }}

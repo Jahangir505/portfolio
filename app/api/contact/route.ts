@@ -3,10 +3,26 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Escape user input before interpolating it into the email HTML.
+function escapeHtml(value: unknown) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const { name, email, subject, message } = body;
+        const safe = {
+            name: escapeHtml(name),
+            email: escapeHtml(email),
+            subject: escapeHtml(subject),
+            message: escapeHtml(message),
+        };
 
         // Validate required fields
         if (!name || !email || !subject || !message) {
@@ -21,7 +37,7 @@ export async function POST(request: NextRequest) {
             from: 'Portfolio Contact <onboarding@resend.dev>', // Resend's default sender for testing
             to: process.env.CONTACT_EMAIL || 'jahangir147441@gmail.com',
             replyTo: email,
-            subject: `Portfolio Contact: ${subject}`,
+            subject: `Portfolio Contact: ${String(subject).replace(/[\r\n]+/g, " ")}`,
             html: `
         <!DOCTYPE html>
         <html>
@@ -44,7 +60,7 @@ export async function POST(request: NextRequest) {
                       <strong style="color: #555;">Name:</strong>
                     </td>
                     <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                      ${name}
+                      ${safe.name}
                     </td>
                   </tr>
                   <tr>
@@ -52,7 +68,7 @@ export async function POST(request: NextRequest) {
                       <strong style="color: #555;">Email:</strong>
                     </td>
                     <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                      <a href="mailto:${email}" style="color: #667eea; text-decoration: none;">${email}</a>
+                      <a href="mailto:${safe.email}" style="color: #667eea; text-decoration: none;">${safe.email}</a>
                     </td>
                   </tr>
                   <tr>
@@ -60,7 +76,7 @@ export async function POST(request: NextRequest) {
                       <strong style="color: #555;">Subject:</strong>
                     </td>
                     <td style="padding: 10px 0;">
-                      ${subject}
+                      ${safe.subject}
                     </td>
                   </tr>
                 </table>
@@ -68,12 +84,12 @@ export async function POST(request: NextRequest) {
               
               <div style="background: white; padding: 20px; border-radius: 8px;">
                 <h2 style="color: #667eea; margin-top: 0; font-size: 20px;">Message</h2>
-                <p style="white-space: pre-wrap; margin: 0; color: #333;">${message}</p>
+                <p style="white-space: pre-wrap; margin: 0; color: #333;">${safe.message}</p>
               </div>
               
               <div style="margin-top: 20px; padding: 15px; background: #e8f4f8; border-left: 4px solid #667eea; border-radius: 4px;">
                 <p style="margin: 0; font-size: 14px; color: #555;">
-                  <strong>💡 Tip:</strong> You can reply directly to this email to respond to ${name}.
+                  <strong>💡 Tip:</strong> You can reply directly to this email to respond to ${safe.name}.
                 </p>
               </div>
             </div>

@@ -17,8 +17,13 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="p-2 rounded-lg glass opacity-50 cursor-not-allowed">
-        <Sun className="h-5 w-5 text-muted-foreground" />
+      <button
+        type="button"
+        disabled
+        aria-label="Toggle theme"
+        className="p-2 rounded-lg glass opacity-50 cursor-not-allowed"
+      >
+        <Sun className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
       </button>
     );
   }

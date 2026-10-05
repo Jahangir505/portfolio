@@ -1,9 +1,11 @@
 "use client";
 
 import { fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "@/lib/animations";
+import { siteConfig } from "@/lib/site";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function About() {
   return (
@@ -25,12 +27,12 @@ export function About() {
               <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.8_0.18_195)] to-[oklch(0.7_0.28_285)] rounded-2xl rotate-6 animate-pulse-slow" />
               <div className="relative glass rounded-2xl overflow-hidden border-2 border-white/20">
                 <Image
-                  src="/profile.png"
-                  alt="Jahangir Hossain"
-                  width={500}
-                  height={500}
+                  src={siteConfig.image.path}
+                  alt={siteConfig.image.alt}
+                  width={siteConfig.image.width}
+                  height={siteConfig.image.height}
+                  sizes="(min-width: 768px) 448px, 100vw"
                   className="w-full h-full object-cover"
-                  priority
                 />
               </div>
             </div>
@@ -49,34 +51,38 @@ export function About() {
                 variants={staggerItem}
                 className="text-4xl md:text-5xl font-bold mb-6"
               >
-                Crafting Digital <span className="gradient-text">Experiences</span>
+                Building Reliable <span className="gradient-text">Web Applications</span>
               </motion.h2>
             </div>
 
             <motion.div variants={staggerItem} className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                I&apos;m a Full Stack Developer with a passion for building beautiful, functional, and user-friendly web applications. I&apos;ve worked with various technologies and frameworks to create exceptional digital experiences.
+                I&apos;m Muhammad Jahangir Hossain, a Full-Stack and Front-End Developer based in
+                Dhaka, Bangladesh. I&apos;ve been building for the web professionally since 2020, first at
+                eDorpon, then with Glostars&apos; remote team in Finland, and now as a Full-Stack
+                Developer at Combosoft.
               </p>
               <p>
-                I specialize in modern JavaScript frameworks like React and Next.js, combined
-                with robust backend technologies like Node.js and databases like MongoDB and
-                PostgreSQL. I&apos;m passionate about writing clean, maintainable code and staying
-                up-to-date with the latest web technologies.
+                Most of my work happens in React.js, Next.js and TypeScript on the front end, with
+                Node.js, Express and Laravel behind it. I also build WordPress and WooCommerce sites,
+                and I&apos;m comfortable with MySQL, PostgreSQL, Prisma and Docker when a project needs them.
               </p>
               <p>
-                When I&apos;m not coding, you can find me exploring new technologies, reading about the latest trends in tech, or just enjoying a good cup of coffee. I&apos;m always looking for new challenges and opportunities to grow as a developer.
+                I care about interfaces that load quickly, work on every screen size and stay easy to
+                maintain after launch, from dashboards and e-commerce stores to company websites and
+                internal tools.
               </p>
             </motion.div>
 
             <motion.div variants={staggerItem} className="flex flex-wrap gap-4 pt-4">
               <motion.a
-                href="/cv/Jahangir CV.pdf"
+                href={siteConfig.cvPath}
                 download
                 className="px-6 py-3 bg-gradient-to-r from-[oklch(0.8_0.18_195)] to-[oklch(0.7_0.28_285)] text-background font-semibold rounded-lg hover:shadow-2xl transition-shadow flex items-center gap-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Download className="w-5 h-5" />
+                <Download className="w-5 h-5" aria-hidden="true" />
                 Download Resume
               </motion.a>
               
@@ -88,6 +94,13 @@ export function About() {
               >
                 Get In Touch
               </motion.a>
+
+              <Link
+                href="/about"
+                className="px-6 py-3 font-semibold rounded-lg text-[oklch(0.8_0.18_195)] hover:underline"
+              >
+                More About Me →
+              </Link>
             </motion.div>
 
             {/* Stats */}
