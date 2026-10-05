@@ -58,9 +58,9 @@ export function About() {
             <motion.div variants={staggerItem} className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
                 I&apos;m Muhammad Jahangir Hossain, a Full-Stack and Front-End Developer based in
-                Dhaka, Bangladesh. I&apos;ve been building for the web professionally since 2020, first at
-                eDorpon, then with Glostars&apos; remote team in Finland, and now as a Full-Stack
-                Developer at Combosoft.
+                Dhaka, Bangladesh. I&apos;ve been building for the web professionally since 2020, at
+                eDorpon, with Glostars&apos; remote team in Finland and at Combosoft, and I&apos;m now a
+                Front-End Developer at Ideeza.
               </p>
               <p>
                 Most of my work happens in React.js, Next.js and TypeScript on the front end, with

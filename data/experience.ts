@@ -2,7 +2,7 @@ export interface Experience {
     id: string;
     title: string;
     company: string;
-    location: string;
+    location?: string;
     type: "work" | "education";
     startDate: string;
     endDate: string;
@@ -13,19 +13,30 @@ export interface Experience {
 
 export const experiences: Experience[] = [
     {
+        id: "6",
+        title: "Front-End Developer",
+        company: "Ideeza",
+        // TODO: add location, responsibilities and technologies for this role.
+        type: "work",
+        startDate: "2025-05",
+        endDate: "",
+        current: true,
+        description: [],
+    },
+    {
         id: "1",
         title: "Full-Stack Developer",
         company: "Combosoft Ltd",
         location: "Dhaka, Bangladesh",
         type: "work",
         startDate: "2023-02",
-        endDate: "",
-        current: true,
+        endDate: "2025-04",
+        current: false,
         description: [
-            "Spearhead a technical team, overseeing project timelines, and ensuring best practices in development",
-            "Manage cloud infrastructure and server deployment using AWS to ensure scalable and secure systems",
-            "Continuously research and implement emerging web technologies to improve product efficiency and functionality",
-            "Lead efforts to maintain, upgrade, and improve existing codebases while mentoring junior developers",
+            "Led a technical team, overseeing project timelines and ensuring best practices in development",
+            "Managed cloud infrastructure and server deployment on AWS to keep systems scalable and secure",
+            "Researched and implemented emerging web technologies to improve product efficiency and functionality",
+            "Maintained, upgraded and improved existing codebases while mentoring junior developers",
         ],
         technologies: ["React", "Next.js", "Laravel", "Node.js", "AWS", "MySQL", "MongoDB"],
     },

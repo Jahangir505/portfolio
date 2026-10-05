@@ -73,7 +73,7 @@ export function Experience() {
                             {exp.company}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {exp.location} •{" "}
+                            {exp.location && <>{exp.location} •{" "}</>}
                             <time dateTime={exp.startDate}>{formatMonth(exp.startDate)}</time> -{" "}
                             {exp.current ? (
                               "Present"
@@ -84,14 +84,16 @@ export function Experience() {
                         </div>
                       </div>
 
-                      <ul className="space-y-2 text-muted-foreground text-sm">
-                        {exp.description.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="text-[oklch(0.8_0.18_195)] mt-1" aria-hidden="true">•</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      {exp.description.length > 0 && (
+                        <ul className="space-y-2 text-muted-foreground text-sm">
+                          {exp.description.map((item, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-[oklch(0.8_0.18_195)] mt-1" aria-hidden="true">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
 
                       {exp.technologies && (
                         <ul className="flex flex-wrap gap-2 mt-4" aria-label="Technologies used">

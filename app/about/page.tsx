@@ -127,9 +127,12 @@ export default function AboutPage() {
                   Tailwind CSS and looked after deployments on AWS.
                 </p>
                 <p>
-                  Since February 2023 I&apos;ve been a Full-Stack Developer at Combosoft Ltd in Dhaka,
-                  where I lead a technical team, manage AWS infrastructure and deployments, and mentor
-                  junior developers.
+                  From February 2023 to April 2025 I was a Full-Stack Developer at Combosoft Ltd in
+                  Dhaka, where I led a technical team, managed AWS infrastructure and deployments, and
+                  mentored junior developers.
+                </p>
+                <p>
+                  Since May 2025 I&apos;ve been working as a Front-End Developer at Ideeza.
                 </p>
                 <p>
                   I hold a B.Sc. in Computer Science and Engineering from Uttara University and a
