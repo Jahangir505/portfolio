@@ -4,51 +4,56 @@ import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 
+const SESSION_KEY = "visitor-counted";
+
 export function VisitorCounter() {
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Track visitor on mount
-    const trackVisitor = async () => {
+    // Count each browser session once; later page loads only read the total.
+    const loadCount = async () => {
+      let alreadyCounted = false;
       try {
-        // Increment visitor count
+        alreadyCounted = sessionStorage.getItem(SESSION_KEY) === "1";
+      } catch {
+        // Storage blocked (private mode etc.) - fall through and count.
+      }
+
+      try {
         const response = await fetch("/api/visitors", {
-          method: "POST",
+          method: alreadyCounted ? "GET" : "POST",
         });
-        
-        if (response.ok) {
-          const data = await response.json();
-          setCount(data.count);
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+
+        const data = await response.json();
+        setCount(data.count);
+        if (!alreadyCounted) {
+          try {
+            sessionStorage.setItem(SESSION_KEY, "1");
+          } catch {}
         }
       } catch (error) {
-        console.error("Error tracking visitor:", error);
-        // Fallback: just get the count without incrementing
-        try {
-          const response = await fetch("/api/visitors");
-          if (response.ok) {
-            const data = await response.json();
-            setCount(data.count);
-          }
-        } catch (fallbackError) {
-          console.error("Error fetching visitor count:", fallbackError);
-        }
+        console.error("Error loading visitor count:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    trackVisitor();
+    loadCount();
   }, []);
 
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Eye className="w-4 h-4" />
+        <Eye className="w-4 h-4" aria-hidden="true" />
         <span>Loading...</span>
       </div>
     );
   }
+
+  // Hide the counter rather than showing a misleading "0".
+  if (count === null) return null;
 
   return (
     <motion.div
@@ -57,7 +62,7 @@ export function VisitorCounter() {
       transition={{ duration: 0.5 }}
       className="flex items-center gap-2 text-sm text-muted-foreground"
     >
-      <Eye className="w-4 h-4" />
+      <Eye className="w-4 h-4" aria-hidden="true" />
       <span>
         <motion.span
           key={count}
